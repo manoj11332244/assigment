@@ -23,10 +23,10 @@ const statusIcons = {
   read: <CheckCheck size={16} className="text-blue-500" />
 };
 
-export const ChatMessage: React.FC<ChatMessageProps> = ({ message, isLast }) => {
+export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const isUser = message.sender === 'user';
   const waveformRef = useRef<HTMLDivElement>(null);
-  const wavesurferRef = useRef<WaveSurfer>();
+  const wavesurferRef = useRef<WaveSurfer  | undefined>(undefined);
   const [isPlaying, setIsPlaying] = React.useState(false);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, isLast }) => 
         <p className="text-sm whitespace-pre-wrap">
           {message.content.split(' ').map((word, index) => {
             if (word.startsWith('@')) {
-              const username = word.slice(1);
+              // const username = word.slice(1);
               return (
                 <span
                   key={index}

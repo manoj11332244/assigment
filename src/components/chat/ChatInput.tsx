@@ -7,6 +7,7 @@ import { getGeminiResponse } from '../../lib/gemini';
 import { socketEmit } from '../../lib/socket';
 import VoiceRecorder from './VoiceRecorder';
 import type { RootState } from '../../redux/store';
+import { Message } from '../../types/type'; 
 
 // Define a simple emoji list (no need for external packages)
 const EMOJI_CATEGORIES = [
@@ -48,7 +49,7 @@ let typingTimeout: NodeJS.Timeout;
 
 export const ChatInput: React.FC = () => {
   const [message, setMessage] = useState('');
-  const [showMentions, setShowMentions] = useState(false);
+  const [_, setShowMentions] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState('general');
   const [error, setError] = useState<string | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -59,7 +60,7 @@ export const ChatInput: React.FC = () => {
   const emojiButtonRef = useRef<HTMLButtonElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
   
-  const { isOnline, availableUsers } = useSelector((state: RootState) => state.chat);
+  const { isOnline} = useSelector((state: RootState) => state.chat);
   const theme = useSelector((state: RootState) => state.chat.theme || 'light');
 
   // Handle clicks outside emoji picker
@@ -145,8 +146,8 @@ export const ChatInput: React.FC = () => {
       type: message.endsWith('?') ? 'question' : undefined
     };
 
-    dispatch(addMessage(userMessage));
-    socketEmit.sendMessage(userMessage);
+    dispatch(addMessage(userMessage as Message));
+    socketEmit.sendMessage(userMessage as Message);
     setMessage('');
 
     // Get AI response using Gemini
@@ -162,8 +163,8 @@ export const ChatInput: React.FC = () => {
         subject: selectedSubject,
         type: 'explanation'
       };
-      dispatch(addMessage(aiMessage));
-      socketEmit.sendMessage(aiMessage);
+      dispatch(addMessage(aiMessage as Message));
+      socketEmit.sendMessage(aiMessage as Message);
     } catch (error) {
       console.error('Error getting AI response:', error);
       setError('API key not configured. Please add a valid Gemini API key to the .env file.');
@@ -176,7 +177,7 @@ export const ChatInput: React.FC = () => {
         subject: selectedSubject,
         type: 'explanation'
       };
-      dispatch(addMessage(errorMessage));
+      dispatch(addMessage(errorMessage as Message));
     } finally {
       dispatch(setAiTyping(false));
     }

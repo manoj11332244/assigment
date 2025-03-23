@@ -22,7 +22,7 @@ export const ChatContainer: React.FC = () => {
       <AnimatePresence>
         {messages.map((message, index) => (
           <ChatMessage 
-            className={'bg-violet-500'}
+            // className={'bg-violet-500'}
             key={message.id}
             message={message}
             isLast={index === messages.length - 1}
